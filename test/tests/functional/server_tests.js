@@ -745,7 +745,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect execute 5 evals in parallel', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', mongodb: '<4.1.0' } },
 
     test: function(done) {
       // Attempt to connect
@@ -784,7 +784,8 @@ describe('Server tests', function() {
     metadata: {
       requires: {
         node: '>0.8.0',
-        topology: ['single', 'ssl', 'wiredtiger']
+        topology: ['single', 'ssl', 'wiredtiger'],
+        mongodb: '<4.1.0'
       }
     },
 

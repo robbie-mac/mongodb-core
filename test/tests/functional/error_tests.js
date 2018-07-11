@@ -6,7 +6,7 @@ var expect = require('chai').expect,
 describe('Error tests', function() {
   it('should return helpful error when geoHaystack fails', {
     metadata: {
-      requires: { topology: ['single', 'replicaset'] }
+      requires: { topology: ['single', 'replicaset'], mongodb: '<4.1.x' }
     },
 
     test: function(done) {
@@ -16,10 +16,18 @@ describe('Error tests', function() {
         var ns = f('%s.geohaystack1', self.configuration.db);
         server.on('connect', function(_server) {
           _server.command('system.$cmd', { geoNear: ns }, {}, function(_err, result) {
-            expect(result).to.not.exist;
-            expect(/can't find ns/.test(_err)).to.be.ok;
-            _server.destroy();
-            done();
+            try {
+              expect(result).to.not.exist;
+              // expect(_err).to.match(/can't find ns/);
+              expect(/can't find ns/.test(_err)).to.be.ok;
+              _server.destroy();
+              done();
+            } catch (e) {
+              console.log('HERE===');
+              console.log(_err);
+              console.log(e);
+              done(e);
+            }
           });
         });
 
